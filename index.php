@@ -268,6 +268,7 @@ $app->post('/add-device/', function () use ($app) {
 });
 //Device edit
 $app->get('/edit-device/(:id)', function ($id) use ($app) {
+you're suposed to edit the device here
 });
 //Device edit - POST
 $app->post('/edit-device/(:id)', function ($id) use ($app) {
