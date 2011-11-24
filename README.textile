@@ -2,7 +2,6 @@ h1. Android GPS Tracker
 
 By "@j2deme":http://twitter.com/j2deme
 
-Jekyll is a simple, blog aware, static site generator. It takes a template directory (representing the raw form of a website), runs it through Textile or Markdown and Liquid converters, and spits out a complete, static website suitable for serving with Apache or your favorite web server. This is also the engine behind "GitHub Pages":http://pages.github.com, which you can use to host your project's page or blog right here from GitHub.
 Android GPS Tracker es un proyecto de la matería de Ingeniería de Software de la maestría en sistemas computacionales, que consiste en dos aplicaciones:
 * Una aplicación en Android que registra la posición GPS del dispositivo y la envia al servidor
 * Una WebApp desde donde se puede llevar el seguimiento de cada uno de los dispositivos asociados.
