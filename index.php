@@ -90,23 +90,35 @@ $app->post('/register/', function() use ($app){
 	if(!isset($_POST['firstName']) || !isset($_POST['lastName']) ||
 	   !isset($_POST['nickname'])  || !isset($_POST['email'])	 ||
 	   !isset($_POST['password'])){
-	   	
-	   }
-	$users = R::find('user', 'nickname = ?', array($_POST['nickname']));
-    $exists = count($devices);
-    $user = R::dispense('user');
-    $user->firstName = $_POST['firstName'];
-    $user->lastName = $_POST['lastName'];
-    $user->email = $_POST['email'];
-    $user->nickname = $_POST['nickname'];
-    $user->password = md5($_POST['password']);
-    $user->isLogged = false;
-    $user->createdOn = time();
-    $id = R::store($user);
-    $app->redirect('/'.WD.'/');
-    $msg = array('type' => 'success',
-                 'msg' => 'El usuario ha sido creado con éxito.');
-    $app->flashNow("message",$msg);
+		$msg = array('type' => 'error',
+                 	 'msg' => 'Ingresa todos los datos requeridos.');
+    	$app->flashNow("message",$msg);
+		$app->redirect('/'.WD.'/');   	   	
+	} else {
+		$users = R::find('user', 'nickname = ?', array($_POST['nickname']));
+	    $exists = count($devices);
+		if($exists != 0){
+	        $msg = array('type' => 'error',
+                 	 'msg' => 'Ya existe un usuario registrado con ese nombre.');
+	    	$app->flashNow("message",$msg);
+			$app->redirect('/'.WD.'/');
+	    } else {
+	    	
+	    }
+	    $user = R::dispense('user');
+	    $user->firstName = $_POST['firstName'];
+	    $user->lastName = $_POST['lastName'];
+	    $user->email = $_POST['email'];
+	    $user->nickname = $_POST['nickname'];
+	    $user->password = md5($_POST['password']);
+	    $user->isLogged = false;
+	    $user->createdOn = time();
+	    $id = R::store($user);
+	    $msg = array('type' => 'success',
+	                 'msg' => 'El usuario ha sido creado con éxito.');
+	    $app->flashNow("message",$msg);
+		$app->redirect('/'.WD.'/');	
+	}
 });
 
 //User profile

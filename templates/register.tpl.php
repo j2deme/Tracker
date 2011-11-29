@@ -4,19 +4,19 @@
         <div class="clearfix" data-field="name">
             <label for="firstName">Nombre(s)</label>
             <div class="input">
-                <input class="medium" id="firstName" name="firstName" size="30" type="text">
+                <input class="medium" id="firstName" name="firstName" size="30" type="text" required="required">
             </div>
         </div>
         <div class="clearfix" data-field="lastName">
             <label for="lastName">Apellidos</label>
             <div class="input">
-                <input class="medium" id="lastName" name="lastName" size="30" type="text">
+                <input class="medium" id="lastName" name="lastName" size="30" type="text" required="required">
             </div>
         </div>
         <div class="clearfix" data-field="email">
             <label for="email">Correo Electr&oacute;nico</label>
             <div class="input">
-                <input class="medium" id="email" name="email" size="35" type="email">
+                <input class="medium" id="email" name="email" size="35" type="email" required="required">
             </div>
         </div>
     </fieldset>
@@ -25,20 +25,19 @@
         <div class="clearfix" data-field="nickname">
             <label for="nickname">Usuario</label>
             <div class="input">
-                <input class="medium" id="nickname" name="nickname" size="30" type="text">
+                <input class="medium" id="nickname" name="nickname" size="30" type="text" required="required">
             </div>
         </div>
         <div class="clearfix" data-field="password">
             <label for="password">Contrase&ntilde;a</label>
             <div class="input">
-                <input class="medium" id="password" name="password" size="30" type="password">
+                <input class="medium" id="password" name="password" size="30" type="password" required="required">
             </div>
         </div>
     </fieldset>
     <div id="actions" class="actions">
         <input type="submit" class="btn primary" value="Continuar Registro">&nbsp;
         <a class="btn" href="/<?php echo $this->eprint($this->WD);?>/">Cancelar</a>
-        <!--<button type="reset" class="btn">Cancelar</button>-->
     </div>
 </form>
 <script>
