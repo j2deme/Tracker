@@ -87,6 +87,13 @@ $app->get('/register/', function() use ($app){
 
 //Registration form - POST
 $app->post('/register/', function() use ($app){
+	if(!isset($_POST['firstName']) || !isset($_POST['lastName']) ||
+	   !isset($_POST['nickname'])  || !isset($_POST['email'])	 ||
+	   !isset($_POST['password'])){
+	   	
+	   }
+	$users = R::find('user', 'nickname = ?', array($_POST['nickname']));
+    $exists = count($devices);
     $user = R::dispense('user');
     $user->firstName = $_POST['firstName'];
     $user->lastName = $_POST['lastName'];
@@ -268,7 +275,6 @@ $app->post('/add-device/', function () use ($app) {
 });
 //Device edit
 $app->get('/edit-device/(:id)', function ($id) use ($app) {
-you're suposed to edit the device here
 });
 //Device edit - POST
 $app->post('/edit-device/(:id)', function ($id) use ($app) {
