@@ -96,7 +96,7 @@ $app->post('/register/', function() use ($app){
 		$app->redirect('/'.WD.'/');   	   	
 	} else {
 		$users = R::find('user', 'nickname = ?', array($_POST['nickname']));
-	    $exists = count($devices);
+	    $exists = count($users);
 		if($exists != 0){
 	        $msg = array('type' => 'error',
                  	 'msg' => 'Ya existe un usuario registrado con ese nombre.');
@@ -295,4 +295,7 @@ $app->post('/edit-device/(:id)', function ($id) use ($app) {
 $app->get('/delete-device/(:id)', function ($id) use ($app) {
 });
 
+$app->get('/add-log/(:mac)/(:lat)/(:long)/(:timestamp)/', function ($mac, $lat, $long, $timestamp) use ($app){
+	echo "Las variables son:<br/>MAC: $mac<br/>Latitud: $lat y Longitud: $long<br/>Timestamp: $timestamp";
+});
 $app->run();
