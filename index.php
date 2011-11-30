@@ -4,9 +4,17 @@ require_once __DIR__.'/lib/Savant3/Savant3.php';
 require_once __DIR__.'/lib/RedBeanPHP/rb.php';
 require_once __DIR__.'/mylib.php';
 
-define(WD,basename(dirname(__FILE__)));
+define("WD", basename(dirname(__FILE__)));
 $app = new Slim();
-R::setup('mysql:host=localhost;dbname=Tracker','root','root');
+
+
+if($_SERVER['SERVER_ADDR'] == '127.0.0.1'){
+	R::setup('mysql:host=localhost;dbname=Tracker','root','root');	
+} else {
+	R::setup('mysql:host=localhost;dbname=j2deme_tracker','j2deme_tracker','tracker');
+}
+
+
 
 //Tracker Home
 $app->get('/', function() use ($app){
@@ -50,18 +58,14 @@ $app->post('/login/', function() use ($app){
 $app->post('/sign-in/', function() use ($app){
     if(isset($_POST['logNickname'],$_POST['logPassword'])){
         $users = R::find('user', 'nickname = ?', array($_POST['logNickname']));
-        foreach($users as $user){
-        }
+        foreach($users as $user){}
         $exists = count($users);
         if($exists > 0 && $user->password == md5($_POST['logPassword'])){
             $app->setCookie('userId', $user->id, '1 hour');
             $app->redirect('/'.WD.'/dashboard/');
-        } else {
-            $app->redirect('/'.WD.'/');
         }
-    } else {
-        $app->redirect('/'.WD.'/');
     }
+	$app->redirect('/'.WD.'/');
 });
 
 //Registration form
@@ -92,8 +96,7 @@ $app->post('/register/', function() use ($app){
 	   !isset($_POST['password'])){
 		$msg = array('type' => 'error',
                  	 'msg' => 'Ingresa todos los datos requeridos.');
-    	$app->flashNow("message",$msg);
-		$app->redirect('/'.WD.'/');   	   	
+    	$app->flashNow("message",$msg);	
 	} else {
 		$users = R::find('user', 'nickname = ?', array($_POST['nickname']));
 	    $exists = count($users);
@@ -101,24 +104,22 @@ $app->post('/register/', function() use ($app){
 	        $msg = array('type' => 'error',
                  	 'msg' => 'Ya existe un usuario registrado con ese nombre.');
 	    	$app->flashNow("message",$msg);
-			$app->redirect('/'.WD.'/');
 	    } else {
-	    	
+	    	$user = R::dispense('user');
+		    $user->firstName = $_POST['firstName'];
+		    $user->lastName = $_POST['lastName'];
+		    $user->email = $_POST['email'];
+		    $user->nickname = $_POST['nickname'];
+		    $user->password = md5($_POST['password']);
+		    $user->isLogged = false;
+		    $user->createdOn = time();
+		    $id = R::store($user);
+		    $msg = array('type' => 'success',
+		                 'msg' => 'El usuario ha sido creado con éxito.');
+		    $app->flashNow("message", $msg);
 	    }
-	    $user = R::dispense('user');
-	    $user->firstName = $_POST['firstName'];
-	    $user->lastName = $_POST['lastName'];
-	    $user->email = $_POST['email'];
-	    $user->nickname = $_POST['nickname'];
-	    $user->password = md5($_POST['password']);
-	    $user->isLogged = false;
-	    $user->createdOn = time();
-	    $id = R::store($user);
-	    $msg = array('type' => 'success',
-	                 'msg' => 'El usuario ha sido creado con éxito.');
-	    $app->flashNow("message",$msg);
-		$app->redirect('/'.WD.'/');	
 	}
+	$app->redirect('/'.WD.'/');
 });
 
 //User profile
@@ -289,13 +290,19 @@ $app->post('/add-device/', function () use ($app) {
 $app->get('/edit-device/(:id)', function ($id) use ($app) {
 });
 //Device edit - POST
-$app->post('/edit-device/(:id)', function ($id) use ($app) {
+$app->put('/edit-device/(:id)', function ($id) use ($app) {
 });
 //Device delete
-$app->get('/delete-device/(:id)', function ($id) use ($app) {
+$app->delete('/delete-device/(:id)', function ($id) use ($app) {
 });
 
 $app->get('/add-log/(:mac)/(:lat)/(:long)/(:timestamp)/', function ($mac, $lat, $long, $timestamp) use ($app){
+	$log = R::dispense('log');
+	$log->mac = $mac;
+	$log->lat = $lat;
+	$log->long = $long;
+	$log->timestamp = $timestamp;
+	$id = R::store($log);
 	echo "Las variables son:<br/>MAC: $mac<br/>Latitud: $lat y Longitud: $long<br/>Timestamp: $timestamp";
 });
 $app->run();
