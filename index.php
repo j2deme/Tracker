@@ -8,12 +8,12 @@ define("WD", basename(dirname(__FILE__)));
 $app = new Slim();
 
 
-/*if($_SERVER['SERVER_ADDR'] == '127.0.0.1'){
+if($_SERVER['SERVER_ADDR'] == '127.0.0.1'){
 	R::setup('mysql:host=localhost;dbname=Tracker','root','root');	
 } else {
 	R::setup('mysql:host=localhost;dbname=j2deme_tracker','j2deme_tracker','tracker');
-}*/
-R::setup('sqlite:data/tracker.sqlite','tracker','tracker');
+}
+
 
 
 //Tracker Home
