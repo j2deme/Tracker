@@ -12,13 +12,16 @@
     <td>
 
         <a href="/<?php echo $this->WD; ?>/device/<?php echo $this->eprint($this->device->id); ?>">
-            <span class="icon view"></span>
+        	<img src="../assets/img/eye.png" alt="View" width="16px" height="16px"/>
+            <!--<span class="icon view"></span>-->
         </a>|
         <a href="/<?php echo $this->WD; ?>/edit-device/<?php echo $this->eprint($this->device->id); ?>">
-            <span class="icon pencil"></span>
+        	<img src="../assets/img/pencil.png" alt="View" width="16px" height="16px"/>
+            <!--<span class="icon pencil"></span>-->
         </a>|
         <a href="/<?php echo $this->WD; ?>/delete-device/<?php echo $this->eprint($this->device->id); ?>">
-            <span class="icon eraser"></span>
+        	<img src="../assets/img/eraser.png" alt="View" width="16px" height="16px"/>
+            <!--<span class="icon eraser"></span>-->
         </a>
     </td>
 </tr>
