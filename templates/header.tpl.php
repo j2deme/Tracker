@@ -26,7 +26,7 @@ setlocale(LC_ALL, 'es_MX');
             ,"iconic.less"
             );
         foreach($styles as $stl){
-            print '<link rel="stylesheet/less" type="text/css" href="/'.$this->WD.'/assets/css/'.$stl.'">';
+            print '<link rel="stylesheet/less" type="text/css" href="/'.$this->WD.'/assets/css/'.$stl.'">'."\n\t";
         }
         $javascripts = array(
             "jquery-1.6.4.min.js"
@@ -34,9 +34,9 @@ setlocale(LC_ALL, 'es_MX');
             //,"prettify.js"
             ,"bootstrap-modal.js"
             ,"bootstrap-alerts.js"
-            ,"bootstrap-twipsy.js"
+            //,"bootstrap-twipsy.js"
             //,"bootstrap-popover.js"
-            ,"bootstrap-dropdown.js"
+            //,"bootstrap-dropdown.js"
             //,"bootstrap-scrollspy.js"
             //,"bootstrap-tabs.js"
             ,"jquery.timeago.js"
@@ -47,7 +47,7 @@ setlocale(LC_ALL, 'es_MX');
             ,"default.js"
             );
         foreach($javascripts as $js){
-            print '<script src="/'.$this->WD.'/assets/js/'.$js.'" type="text/javascript"></script>';
+            print '<script src="/'.$this->WD.'/assets/js/'.$js.'" type="text/javascript"></script>'."\n\t";
         }
         ?>
 

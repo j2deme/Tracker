@@ -24,7 +24,7 @@
         	<img src="../assets/img/eraser.png" alt="Borrar" width="16px" height="16px"/>
             <!--<span class="icon eraser"></span>-->
         </a>
-        <div id="delete-device-<?php echo $this->eprint($this->device->id);?>" class="modal fade">
+        <div id="delete-device-<?php echo $this->device->id;?>" class="modal fade">
 	      	<div class="modal-header">
 	        	<a href="#" class="close">x</a>
 	        	<h3>Desasociar Dispositivo</h3>
@@ -34,7 +34,8 @@
 	        	<p>Una vez desasociado se borrar&aacute;n todos los registros y no se podr&aacute;n recuperar.</p>
 	      	</div>
 	      	<div class="modal-footer">
-	        	<a id="delete-device-<?php echo $this->device->id;?>" class="btn danger" href="/<?php echo $this->WD; ?>/delete-device/<?php echo $this->device->id; ?>">Continuar</a>
+	      		<a class="btn" onclick="$(function(){$('#delete-device-<?php echo $this->device->id;?>').modal('hide')});">Cancelar</a>
+	        	<a class="btn danger" href="/<?php echo $this->WD; ?>/delete-device/<?php echo $this->device->id; ?>">Continuar</a>
 	      	</div>
     	</div>
     </td>

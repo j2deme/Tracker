@@ -1,6 +1,6 @@
 <div class="row">
     <div class="span10">
-        <div class="row show-grid">
+        <div class="row">
             <div class="span3">
                 <p><h3>Modelo</h3>
                 <?php echo $this->eprint($this->device->model); ?></p>
@@ -8,8 +8,8 @@
                 <?php
                     echo "<abbr class='timeago' title='".date('c',$this->device->createdOn)."'>".spanish_months(date('n',$this->device->createdOn)).date(' t, Y',$this->device->createdOn)."</abbr>";
                 ?></p>
-            </div>
-            <div class="span4">
+			</div>
+            <div class="span3">
                 <p><h3>Usuario</h3>
                 <?php echo $this->eprint($this->device->user); ?></p>
                 <p><h3>Actualizado</h3>
@@ -21,6 +21,7 @@
                 <p><h3>MAC</h3>
                 <?php echo $this->eprint($this->device->mac); ?></p>
             </div>
+		</div>
 <script>
     $(function(){
         $("#map").gmap3(
@@ -57,10 +58,8 @@
         );
     });
 </script>
-        </div>
         <div class="row">
             <div class="span8 offset1 map" id="map">
-                width:340px;
             </div>
             <div class="span10">
                 <h3>Ultimos registros</h3>
