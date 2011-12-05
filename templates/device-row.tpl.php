@@ -5,7 +5,6 @@
     <td><?php echo $this->eprint($this->device->model); ?></td>
     <td>
     <?php
-        echo $this->eprint($this->device->place)."&nbsp;";
         echo "<abbr class='timeago' title='".date('c',$this->device->createdOn)."'>".spanish_months(date('n',$this->device->createdOn)).date(' t, Y',$this->device->createdOn)."</abbr>";
     ?>
     </td>

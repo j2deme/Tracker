@@ -3,6 +3,7 @@ require_once __DIR__.'/lib/Slim/Slim.php';
 require_once __DIR__.'/lib/Savant3/Savant3.php';
 require_once __DIR__.'/lib/RedBeanPHP/rb.php';
 require_once __DIR__.'/mylib.php';
+require_once __DIR__.'/curl.php';
 
 define("WD", basename(dirname(__FILE__)));
 $app = new Slim();
@@ -212,22 +213,7 @@ $app->get('/places/', function () use ($app) {
 //Place view
 $app->get('/device/(:id)', function ($id) use ($app) {
     $device = R::load('device',$id);
-	$logs = R::find('log', 'mac = ? ORDER BY timestamp LIMIT 10',
-					array($device->mac));
-    $exists = count($logs);
-	$markers = "";
-	if($exists == 1){
-		$markers .= "{lat:$log->lat,lng:$log->lng}";
-	} elseif($exists > 1) {
-		foreach ($logs as $log) {
-			$markers .= "{lat:$log->lat,lng:$log->lng},";
-			//{lat:23.73034,lng:-99.16043,data: 'Grande Estación'},
-		}	
-	}
-	$device->logs = $logs;
-	$device->markers = $markers;
-	
-    $id = $app->getCookie('userId');
+	$id = $app->getCookie('userId');
     if(!isset($id)){
         $app->redirect('/'.WD.'/');
     }
@@ -243,6 +229,44 @@ $app->get('/device/(:id)', function ($id) use ($app) {
     $tpl->tagline = "";
     $tpl->user = $user;
     $tpl->device = $device;
+	
+	$logs = R::find('log', 'mac = ? ORDER BY timestamp LIMIT 10',
+					array($device->mac));
+    $exists = count($logs);
+	$markers = "";
+	if($exists == 1){
+		foreach ($logs as $log) {}
+		$markers .= "{lat:$log->lat,lng:$log->lng}";
+	} elseif($exists > 1) {
+		foreach ($logs as $log) {
+			$date1 = date('c', $log->timestamp);
+			$date2 = spanish_months(date('n',$log->timestamp)).date(' t, Y',$log->timestamp);
+			$markers .= "{lat:$log->lat,lng:$log->lng},";
+		}	
+	}
+	//{lat:23.73034,lng:-99.16043,data: 'Grande Estación'},
+	
+    if($exists != 0){
+        $tpl->rows = "";
+        $i = 1;
+        foreach($logs as $log){
+        	$tpl->num = $i;
+			$http = new HttpConnection();
+			$http->init();
+			$response = $http->get("http://maps.google.com/maps/api/geocode/json?latlng=".$log->lat.",".$log->lng."&sensor=true");
+			$http->close();
+			$address = json_decode($response);
+			$tpl->address = $address['results']['formatted_address'];
+            $tpl->log = $log;
+            $tpl->rows .= $tpl->fetch('log-simple-row.tpl.php');
+            $i++;
+        }
+    } else {
+        $tpl->rows = '<tr><td colspan="5">No hay dispositivos asociados</td></tr>';
+    }
+	$device->logs = $logs;
+	$device->markers = $markers;
+	
     $tpl->header = $tpl->fetch('header.tpl.php');
     $tpl->body = $tpl->fetch('device.tpl.php');
     $tpl->sidebar = $tpl->fetch('sidebar.tpl.php');
@@ -309,13 +333,24 @@ $app->put('/edit-device/(:id)', function ($id) use ($app) {
 $app->delete('/delete-device/(:id)', function ($id) use ($app) {
 });
 
-$app->get('/add-log/(:mac)/(:lat)/(:long)/(:timestamp)/', function ($mac, $lat, $long, $timestamp) use ($app){
-	$log = R::dispense('log');
-	$log->mac = $mac;
-	$log->lat = $lat;
-	$log->long = $long;
-	$log->timestamp = $timestamp;
-	$id = R::store($log);
-	echo "Las variables son:<br/>MAC: $mac<br/>Latitud: $lat y Longitud: $long<br/>Timestamp: $timestamp";
+$app->get('/add-log/(:mac)/(:lat)/(:lng)/(:timestamp)/', function ($mac, $lat, $lng, $timestamp) use ($app){
+	if(isset($mac) && isset($lat) && isset($lng) && isset($timestamp)){
+		$log = R::dispense('log');
+		$log->mac = $mac;
+		$log->lat = $lat;
+		$log->lng = $lng;
+		$log->timestamp = $timestamp;
+		$id = R::store($log);
+		if(isset($id)){
+			echo "OK";
+		} else {
+			echo "ERROR";
+		}
+		//echo "Las variables son:<br/>MAC: $mac<br/>Latitud: $lat y Longitud: $long<br/>Timestamp: $timestamp";	
+	}
+});
+
+$app->get('/time/', function() use ($app){
+	echo time();
 });
 $app->run();

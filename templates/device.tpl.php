@@ -33,37 +33,71 @@
               ],
               marker:{
                 options:{
-                  draggable: false
+                  draggable: false,
+                  zoom:3
                 },
                 events:{
-                  mouseover: function(marker, event, data){
-                    var map = $(this).gmap3('get'),
+                  click: function(marker, event, data){
+                  	$(this).gmap3({
+						action:'getAddress',
+						latLng:marker.getPosition(),
+						callback:function(results){
+							var map = $(this).gmap3('get'),
+							infowindow = $(this).gmap3({action:'get', name:'infowindow'}),
+							content = results && results[1] ? results && results[1].formatted_address : 'Sin dirección';
+							if (infowindow){
+								infowindow.open(map, marker);
+								infowindow.setContent(content);
+							} else {
+								$(this).gmap3({action:'addinfowindow', anchor:marker, options:{content: content}});
+							}
+						}
+					});
+                    /*var map = $(this).gmap3('get'),
                         infowindow = $(this).gmap3({action:'get', name:'infowindow'});
                     if (infowindow){
                       infowindow.open(map, marker);
                       infowindow.setContent(data);
                     } else {
-                      $(this).gmap3({action:'addinfowindow', anchor:marker, options:{content: data}});
-                    }
-                  },
-                  mouseout: function(){
+                      $(this).gmap3({
+                      	action:'addinfowindow', 
+                      	anchor:marker, 
+                      	options:{
+                      		content: data
+                      		}
+                      	});
+                    }*/
+                  }
+                  /*,mouseout: function(){
                     var infowindow = $(this).gmap3({action:'get', name:'infowindow'});
                     if (infowindow){
                       infowindow.close();
                     }
-                  }
+                  }*/
                 }
               }
-            },
-            "autofit"
+            }
+            ,"autofit"
         );
     });
 </script>
         <div class="row">
-            <div class="span8 offset1 map" id="map">
+            <div class="span10 map" id="map">
             </div>
             <div class="span10">
                 <h3>Ultimos registros</h3>
+                <table id="last-logs-table" class="zebra-striped">
+			    <thead>
+			        <tr>
+			            <th>#</th>
+			            <th>Registrado</th>
+			            <th>Direcci&oacute;n</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			        <?php //echo $this->rows; ?>
+			    </tbody>
+			</table>
             </div>
         </div>
     </div>
