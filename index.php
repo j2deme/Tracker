@@ -13,7 +13,7 @@ $app = new Slim();
 } else {
 	R::setup('mysql:host=localhost;dbname=j2deme_tracker','j2deme_tracker','tracker');
 }*/
-R::setup('sqlite:data/tracker.sqlite;');
+R::setup('sqlite:data/tracker.sqlite','tracker','tracker');
 
 
 
