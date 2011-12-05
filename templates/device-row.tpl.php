@@ -23,5 +23,18 @@
         	<img src="../assets/img/eraser.png" alt="View" width="16px" height="16px"/>
             <!--<span class="icon eraser"></span>-->
         </a>
+        <div id="delete-device" class="modal fade">
+	      	<div class="modal-header">
+	        	<a href="#" class="close">x</a>
+	        	<h3>Desasociar Dispositivo</h3>
+	      	</div>
+	      	<div class="modal-body">
+	        	<p>¿Esta seguro que desea desasociar el dispositivo?</p>
+	        	<p>Una vez desasociado se borrar&aacute;n todos los registros y no se podr&aacute;n recuperar.</p>
+	      	</div>
+	      	<div class="modal-footer">
+	        	<a id="delete-device" class="btn danger">Continuar</a> 
+	      	</div>
+    	</div>
     </td>
 </tr>

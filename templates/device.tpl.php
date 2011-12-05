@@ -1,6 +1,6 @@
 <div class="row">
     <div class="span10">
-        <div class="row">
+        <div class="row show-grid">
             <div class="span3">
                 <p><h3>Modelo</h3>
                 <?php echo $this->eprint($this->device->model); ?></p>
