@@ -212,9 +212,21 @@ $app->get('/places/', function () use ($app) {
 //Place view
 $app->get('/device/(:id)', function ($id) use ($app) {
     $device = R::load('device',$id);
-    /*echo "<pre>";
-    print_r($device);
-    echo "</pre>";*/
+	$logs = R::find('log', 'mac = ? ORDER BY timestamp LIMIT 10',
+					array($device->mac));
+    $exists = count($logs);
+	$markers = "";
+	if($exists == 1){
+		$markers .= "{lat:$log->lat,lng:$log->lng}";
+	} elseif($exists > 1) {
+		foreach ($logs as $log) {
+			$markers .= "{lat:$log->lat,lng:$log->lng},";
+			//{lat:23.73034,lng:-99.16043,data: 'Grande Estación'},
+		}	
+	}
+	$device->logs = $logs;
+	$device->markers = $markers;
+	
     $id = $app->getCookie('userId');
     if(!isset($id)){
         $app->redirect('/'.WD.'/');

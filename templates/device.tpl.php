@@ -27,8 +27,9 @@
         $("#map").gmap3(
             { action: 'addMarkers',
               markers:[
-                {lat:23.73034,lng:-99.16043,data: 'Grande Estación'},
-                {lat:23.76316,lng:-99.14115,data: 'Grande Campestre'}
+              <?php echo $this->eprint($this->device->markers)?>
+                /*{lat:23.73034,lng:-99.16043,data: 'Grande Estación'},
+                {lat:23.76316,lng:-99.14115,data: 'Grande Campestre'}*/
               ],
               marker:{
                 options:{
