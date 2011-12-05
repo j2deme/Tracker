@@ -12,16 +12,16 @@
     <td>
 
         <a href="/<?php echo $this->WD; ?>/device/<?php echo $this->eprint($this->device->id); ?>">
-        	<img src="../assets/img/eye.png" alt="View" width="16px" height="16px"/>
+        	<img src="../assets/img/eye.png" alt="Ver" width="16px" height="16px"/>
             <!--<span class="icon view"></span>-->
         </a>
         <a href="/<?php echo $this->WD; ?>/edit-device/<?php echo $this->eprint($this->device->id); ?>">
-        	<img src="../assets/img/pencil.png" alt="View" width="16px" height="16px"/>
+        	<img src="../assets/img/pencil.png" alt="Editar" width="16px" height="16px"/>
             <!--<span class="icon pencil"></span>-->
         </a>
         <!--<a href="/<?php echo $this->WD; ?>/delete-device/<?php echo $this->eprint($this->device->id); ?>">-->
         <a data-controls-modal="delete-device-<?php echo $this->device->id;?>" data-backdrop="static">
-        	<img src="../assets/img/eraser.png" alt="View" width="16px" height="16px"/>
+        	<img src="../assets/img/eraser.png" alt="Borrar" width="16px" height="16px"/>
             <!--<span class="icon eraser"></span>-->
         </a>
         <div id="delete-device-<?php echo $this->eprint($this->device->id);?>" class="modal fade">
