@@ -91,11 +91,12 @@
 			        <tr>
 			            <th>#</th>
 			            <th>Registrado</th>
-			            <th>Direcci&oacute;n</th>
+			            <th>Latitud</th>
+			            <th>Longitud</th>
 			        </tr>
 			    </thead>
 			    <tbody>
-			        <?php //echo $this->rows; ?>
+			        <?php echo $this->rows; ?>
 			    </tbody>
 			</table>
             </div>

@@ -251,12 +251,12 @@ $app->get('/device/(:id)', function ($id) use ($app) {
         $i = 1;
         foreach($logs as $log){
         	$tpl->num = $i;
-			$http = new HttpConnection();
+			/*$http = new HttpConnection();
 			$http->init();
 			$response = $http->get("http://maps.google.com/maps/api/geocode/json?latlng=".$log->lat.",".$log->lng."&sensor=true");
 			$http->close();
 			$address = json_decode($response);
-			$tpl->address = $address['results']['formatted_address'];
+			$tpl->address = $address['results']['formatted_address'];*/
             $tpl->log = $log;
             $tpl->rows .= $tpl->fetch('log-simple-row.tpl.php');
             $i++;
