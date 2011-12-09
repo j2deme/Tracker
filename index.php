@@ -5,7 +5,8 @@ require_once __DIR__.'/lib/RedBeanPHP/rb.php';
 require_once __DIR__.'/mylib.php';
 require_once __DIR__.'/curl.php';
 
-define("WD", basename(dirname(__FILE__)));
+//define("WD", basename(dirname(__FILE__)));
+define("WD", ".".dirname($_SERVER['PHP_SELF']));
 $app = new Slim();
 
 
@@ -230,9 +231,14 @@ $app->get('/device/(:id)', function ($id) use ($app) {
     $tpl->user = $user;
     $tpl->device = $device;
 	
-	$logs = R::find('log', 'mac = ? ORDER BY timestamp LIMIT 10',
-					array($device->mac));
-    $exists = count($logs);
+	//$logs = R::find('log', 'mac = ? ORDER BY timestamp DESC LIMIT 5',array($device->mac));
+	/*$logs =  R::$f->begin()
+    		->select('*')->from('log')
+    		->where(' mac = ? ')->put($device->mac)->get();*/
+	$logs_rows = R::getAll("SELECT DISTINCT mac, lat, lng, timestamp FROM log WHERE mac ='".$device->mac."' ORDER BY timestamp DESC LIMIT 5;");
+	$logs = array2object($logs_rows);
+    $exists = count($logs_rows);
+	
 	$markers = "";
 	if($exists == 1){
 		foreach ($logs as $log) {}
