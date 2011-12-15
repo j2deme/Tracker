@@ -235,42 +235,52 @@ $app->get('/device/(:id)', function ($id) use ($app) {
 	/*$logs =  R::$f->begin()
     		->select('*')->from('log')
     		->where(' mac = ? ')->put($device->mac)->get();*/
-	$logs_rows = R::getAll("SELECT DISTINCT mac, lat, lng, timestamp FROM log WHERE mac ='".$device->mac."' ORDER BY timestamp DESC LIMIT 5;");
-	$logs = array2object($logs_rows);
+	$logs_rows = R::getAll("SELECT DISTINCT mac, lat, lng, timestamp FROM log WHERE mac ='".$device->mac."' ORDER BY timestamp DESC LIMIT 3;");
+	/*echo "<pre>";
+	print_r($logs_rows);
+	echo "</pre>";*/
+	//$logs = array2object($logs_rows);
     $exists = count($logs_rows);
+	/*foreach ($logs_rows as $logs) {
+		$olog = makeObjects($logs);
+		echo "{lat:$olog->lat,lng:$olog->lng}";
+		echo "timestamp $olog->timestamp";
+		echo "<pre>";
+		print_r($logs);
+		echo "</pre>";	
+	}*/
 	
+	//{lat:23.73034,lng:-99.16043,data: 'Grande Estación'},
+	//$logs = makeObjects($logs_rows);
 	$markers = "";
 	if($exists == 1){
-		foreach ($logs as $log) {}
-		$markers .= "{lat:$log->lat,lng:$log->lng}";
+		foreach ($logs_rows as $log) {}
+		$olog = makeObjects($log);
+		$markers .= "{lat:$olog->lat,lng:$olog->lng}";
 	} elseif($exists > 1) {
-		foreach ($logs as $log) {
-			$date1 = date('c', $log->timestamp);
-			$date2 = spanish_months(date('n',$log->timestamp)).date(' t, Y',$log->timestamp);
-			$markers .= "{lat:$log->lat,lng:$log->lng},";
+		foreach ($logs_rows as $log) {
+			$olog = makeObjects($log);
+			$date1 = date('c', $olog->timestamp);
+			$date2 = spanish_months(date('n',$olog->timestamp)).date(' t, Y',$olog->timestamp);
+			$markers .= "{lat:$olog->lat,lng:$olog->lng},";
 		}	
 	}
-	//{lat:23.73034,lng:-99.16043,data: 'Grande Estación'},
 	
     if($exists != 0){
         $tpl->rows = "";
         $i = 1;
-        foreach($logs as $log){
+        foreach($logs_rows as $log){
+        	$olog = makeObjects($log);
         	$tpl->num = $i;
-			/*$http = new HttpConnection();
-			$http->init();
-			$response = $http->get("http://maps.google.com/maps/api/geocode/json?latlng=".$log->lat.",".$log->lng."&sensor=true");
-			$http->close();
-			$address = json_decode($response);
-			$tpl->address = $address['results']['formatted_address'];*/
-            $tpl->log = $log;
+            $tpl->log = $olog;
             $tpl->rows .= $tpl->fetch('log-simple-row.tpl.php');
             $i++;
         }
     } else {
         $tpl->rows = '<tr><td colspan="5">No hay dispositivos asociados</td></tr>';
     }
-	$device->logs = $logs;
+	//$device->logs = makeObjects($logs_rows);
+	//$device->logs = $logs;
 	$device->markers = $markers;
 	
     $tpl->header = $tpl->fetch('header.tpl.php');
@@ -308,17 +318,17 @@ $app->get('/add-device/', function () use ($app) {
 $app->post('/add-device/', function () use ($app) {
     $id = $app->getCookie('userId');
     $user = R::load('user',$id);
-    $devices = R::find('device', 'owner_id = ? AND mac = ?', array($user->id,$_POST['mac']));
+    $devices = R::find('device', 'owner_id = ? AND uid = ?', array($user->id,$_POST['uid']));
     $exists = count($devices);
     if($exists != 0){
         $msg = array('type' => 'error',
-                 'msg' => '<strong>Error:</strong> Ya existe un dispositivo registrado con esa MAC.');
+                 'msg' => '<strong>Error:</strong> Ya existe un dispositivo con ese identificador.');
         $app->flash("message",$msg);
     } else {
         $place = R::dispense('device');
         $place->model = $_POST['model'];
         $place->user = $_POST['user'];
-        $place->mac = $_POST['mac'];
+        $place->uid = $_POST['uid'];
         $place->owner = $user;
         $place->createdOn = time();
         $place->lastUpdated = time();
@@ -339,10 +349,10 @@ $app->put('/edit-device/(:id)', function ($id) use ($app) {
 $app->delete('/delete-device/(:id)', function ($id) use ($app) {
 });
 
-$app->get('/add-log/(:mac)/(:lat)/(:lng)/(:timestamp)/', function ($mac, $lat, $lng, $timestamp) use ($app){
+$app->get('/add-log/(:uid)/(:lat)/(:lng)/(:timestamp)/', function ($uid, $lat, $lng, $timestamp) use ($app){
 	if(isset($mac) && isset($lat) && isset($lng) && isset($timestamp)){
 		$log = R::dispense('log');
-		$log->mac = $mac;
+		$log->uid = $uid;
 		$log->lat = $lat;
 		$log->lng = $lng;
 		$log->timestamp = $timestamp;

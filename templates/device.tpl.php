@@ -18,8 +18,8 @@
                 ?></p>
             </div>
             <div class="span3">
-                <p><h3>MAC</h3>
-                <?php echo $this->eprint($this->device->mac); ?></p>
+                <p><h3>Identificador</h3>
+                <?php echo $this->eprint($this->device->uid); ?></p>
             </div>
 		</div>
 <script>

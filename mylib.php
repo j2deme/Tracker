@@ -35,4 +35,13 @@ function array2object($array) {
       return FALSE;
     }
 }
+
+function makeObjects($data) {
+    $object = (object) $data;
+	foreach ($object as $property) {
+        if(is_array($property))
+        	$this->makeObjects($property);
+    }
+	return $object;
+}
 ?>

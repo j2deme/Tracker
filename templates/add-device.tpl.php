@@ -14,9 +14,9 @@
             </div>
         </div>
         <div class="clearfix">
-            <label for="mac">Direcci&oacute;n MAC</label>
+            <label for="uid">Identificador del equipo</label>
             <div class="input">
-                <input class="medium" id="mac" name="mac" type="text" placeholder="01:23:45:67:89:ab">
+                <input class="medium" id="uid" name="uid" type="text" placeholder="">
             </div>
         </div>
     </fieldset>
@@ -38,9 +38,9 @@
         message: '¿Qui&eacute;n usa el dispositivo?',
         test: happy.alpha
       },
-      '#mac': {
+      '#uid': {
         required: true,
-        message: 'Ingresa la direcci&oacute;n MAC de su equipo',
+        message: 'Ingresa el identificador de tu equipo',
       }
     }
   });
