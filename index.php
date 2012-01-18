@@ -92,6 +92,36 @@ $app->get('/register/', function() use ($app){
     return $tpl->display('main.tpl.php');
 });
 
+$app->get('/new-user/(:name)/(:lastName)/(:email)/(:password)/', function($name, $lastName, $email, $password) use ($app){
+	if(!isset($name) || !isset($lastName) ||
+	   !isset($email)  || !isset($password)){
+		$msg = 'Ingresa todos los datos requeridos.';
+	} else {
+		$users = R::find('user', 'nickname = ?', array($_POST['nickname']));
+	    $exists = count($users);
+		if($exists != 0){
+	        $msg = array('type' => 'error',
+                 	 'msg' => 'Ya existe un usuario registrado con ese nombre.');
+	    	$app->flashNow("message",$msg);
+	    } else {
+	    	$user = R::dispense('user');
+		    $user->firstName = $_POST['firstName'];
+		    $user->lastName = $_POST['lastName'];
+		    $user->email = $_POST['email'];
+		    $user->nickname = $_POST['nickname'];
+		    $user->password = md5($_POST['password']);
+		    $user->isLogged = false;
+		    $user->createdOn = time();
+		    $id = R::store($user);
+		    $msg = array('type' => 'success',
+		                 'msg' => 'El usuario ha sido creado con éxito.');
+		    $app->flashNow("message", $msg);
+	    }
+	}
+	//$app->redirect('/'.WD.'/');
+	return $msg;
+});
+
 //Registration form - POST
 $app->post('/register/', function() use ($app){
 	if(!isset($_POST['firstName']) || !isset($_POST['lastName']) ||
