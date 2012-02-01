@@ -53,27 +53,7 @@
 							}
 						}
 					});
-                    /*var map = $(this).gmap3('get'),
-                        infowindow = $(this).gmap3({action:'get', name:'infowindow'});
-                    if (infowindow){
-                      infowindow.open(map, marker);
-                      infowindow.setContent(data);
-                    } else {
-                      $(this).gmap3({
-                      	action:'addinfowindow', 
-                      	anchor:marker, 
-                      	options:{
-                      		content: data
-                      		}
-                      	});
-                    }*/
                   }
-                  /*,mouseout: function(){
-                    var infowindow = $(this).gmap3({action:'get', name:'infowindow'});
-                    if (infowindow){
-                      infowindow.close();
-                    }
-                  }*/
                 }
               }
             }

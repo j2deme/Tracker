@@ -368,6 +368,8 @@ $app -> get('/add-log/(:uid)/(:lat)/(:lng)/(:timestamp)/', function($uid, $lat, 
 			echo "ERROR";
 		}
 		//echo "Las variables son:<br/>MAC: $mac<br/>Latitud: $lat y Longitud: $long<br/>Timestamp: $timestamp";
+	} else {
+		echo "ERROR";
 	}
 });
 
