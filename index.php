@@ -108,7 +108,6 @@ $app -> get('/new-user/(:firstName)/(:lastName)/(:email)/(:password)/', function
 			$msg = 'El usuario ha sido creado con éxito.';
 		}
 	}
-	//$app->redirect('/'.WD.'/');
 	echo $msg;
 });
 
@@ -283,8 +282,7 @@ $app -> get('/device/(:id)', function($id) use ($app) {
 	} else {
 		$tpl -> rows = '<tr><td colspan="5">No existen registros</td></tr>';
 	}
-	//$device->logs = makeObjects($logs_rows);
-	//$device->logs = $logs;
+	
 	$device -> markers = $markers;
 
 	$tpl -> header = $tpl -> fetch('header.tpl.php');
@@ -374,6 +372,7 @@ $app -> get('/add-log/(:uid)/(:lat)/(:lng)/(:timestamp)/', function($uid, $lat, 
 });
 
 $app -> get('/new-log/(:logs)/', function($logs) use ($app) {
+	$msg = "";
 	$size = strlen($logs);
 	if($logs[$size-1] == "~"){
 		$logs = substr ($logs, 0, -1);
@@ -384,24 +383,35 @@ $app -> get('/new-log/(:logs)/', function($logs) use ($app) {
 	
 	if (isset($arr_logs)) {
 		$error = FALSE;
-		foreach ($arr_logs as $log) {
-			list($uid, $lat, $lng, $timestamp) = explode(":",$log);
-			$log = R::dispense('log');
-			$log -> uid = $uid;
-			$log -> lat = $lat;
-			$log -> lng = $lng;
-			$log -> timestamp = $timestamp;
-			$id = R::store($log);
-			if (!isset($id)) {
-				$error = TRUE;
-			}
-		}	
+		R::begin();
+		try{
+			foreach ($arr_logs as $log) {
+				list($uid, $lat, $lng, $timestamp) = explode(":",$log);
+				$log = R::dispense('log');
+				$log -> uid = $uid;
+				$log -> lat = $lat;
+				$log -> lng = $lng;
+				$log -> timestamp = $timestamp;
+				$id = R::store($log);
+				if (!isset($id)) {
+					$error = TRUE;
+					break;
+				}
+			}	
+			R::commit();
+		} catch (Exception $e){
+			R::rollback();
+		}
+		
 		if($error){
-			echo "ERROR";
+			$msg = "ERROR";
+		} else {
+			$msg = "OK";
 		}
 	} else {
-		echo "ERROR";
+		$msg = "ERROR";
 	}
+	return $msg;
 });
 
 $app -> get('/time/', function() use ($app) {
