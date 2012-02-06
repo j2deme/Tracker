@@ -86,15 +86,16 @@ $app -> get('/register/', function() use ($app) {
 	return $tpl -> display('main.tpl.php');
 });
 
-//New user from Mobile Device
+//New user from Mobile
 $app -> get('/new-user/(:firstName)/(:lastName)/(:email)/(:password)/', function($firstName, $lastName, $email, $password) use ($app) {
+	// 1 empty, 2 usuario existe, 0 no error 
 	if (!isset($name) || !isset($lastName) || !isset($email) || !isset($password)) {
-		$msg = 'Ingresa todos los datos requeridos.';
+		$msg = 1; //"Ingresa todos los datos requeridos."
 	} else {
 		$users = R::find('user', 'nickname = ?', array($_POST['nickname']));
 		$exists = count($users);
 		if ($exists != 0) {
-			$msg = 'Ya existe un usuario registrado con ese nombre.';
+			$msg = 2;// "Ya existe un usuario registrado con ese nombre."
 		} else {
 			$user = R::dispense('user');
 			$user -> firstName = $firstName;
@@ -105,9 +106,52 @@ $app -> get('/new-user/(:firstName)/(:lastName)/(:email)/(:password)/', function
 			$user -> isLogged = false;
 			$user -> createdOn = time();
 			$id = R::store($user);
-			$msg = 'El usuario ha sido creado con éxito.';
+			$msg = 0; //"El usuario ha sido creado con éxito."
 		}
 	}
+	echo $msg;
+});
+
+//Associate device from Mobile
+$app -> get('/assoc-device/(:nickname)/(:password)/(:uid)/', function($nickname, $password, $uid) use ($app) {
+	/*
+	 * Return 1 if user doesn't exist, 2 if password don't match,
+	 * 3 device associated previously to a diferent account, 4 empty & 0 if OK
+	 * */
+	$msg = 0;
+	if(!isset($nickname) && !isset($password) && !isset($uid)){
+		$msg = 4;
+	} else {
+		$user = R::findOne('user','nickname = ?', array($nickname));
+		if(!is_object($user)){
+			$msg = 1;
+		} else {
+			if($user -> password == md5($password)){
+				$devices = R::find('device', 'uid = ?', array($uid));
+				$exists = count($devices);
+				if ($exists != 0) {
+					$msg = 3;
+				} else {
+					/*$device = R::dispense('device');
+					$device -> model = "Dispositivo sin nombre";
+					$device -> user = $user -> firstName." ".$user-> lastName;
+					$device -> uid = $uid;
+					$device -> owner = $user;
+					$device -> createdOn = time();
+					$device -> lastUpdated = time();
+					$response = R::store($place);*/
+					$msg = 0;
+				}
+			} else {
+				$msg = 2;
+			}
+			echo md5($password);
+			echo "<pre>";
+			echo $user;
+			echo "</pre>";
+		}
+	}
+	
 	echo $msg;
 });
 
@@ -326,14 +370,14 @@ $app -> post('/add-device/', function() use ($app) {
 		$msg = array('type' => 'error', 'msg' => '<strong>Error:</strong> Ya existe un dispositivo con ese identificador.');
 		$app -> flash("message", $msg);
 	} else {
-		$place = R::dispense('device');
-		$place -> model = $_POST['model'];
-		$place -> user = $_POST['user'];
-		$place -> uid = $_POST['uid'];
-		$place -> owner = $user;
-		$place -> createdOn = time();
-		$place -> lastUpdated = time();
-		$place_id = R::store($place);
+		$device = R::dispense('device');
+		$device -> model = $_POST['model'];
+		$device -> user = $_POST['user'];
+		$device -> uid = $_POST['uid'];
+		$device -> owner = $user;
+		$device -> createdOn = time();
+		$device -> lastUpdated = time();
+		$response = R::store($place);
 		$msg = array('type' => 'info', 'msg' => 'El dispositivo ha sido asociado exitosamente.');
 		$app -> flashNow("message", $msg);
 	}
